@@ -1,0 +1,37 @@
+{
+    "name": "linedubbed2",
+    "description": "lineDUBbed – DUB package testing system",
+
+    "copyright": "Copyright © 2023 Elias Batek",
+    "license": "BSL-1.0",
+
+    "authors": [
+        "Elias Batek"
+    ],
+
+    "targetPath": "bin",
+
+    "subPackages": [
+        {
+            "name": "controller",
+            "description": "Central controller",
+            "importPaths": ["controller"],
+            "sourcePaths": ["controller"],
+            "targetPath": "bin",
+            "targetType": "executable",
+            "dependencies": {
+            }
+        },
+        {
+            "name": "runner",
+            "description": "Test runner",
+            "importPaths": ["runner"],
+            "sourcePaths": ["runner"],
+            "targetPath": "bin",
+            "targetType": "executable",
+            "dependencies": {
+                "requests": "~>2.0"
+            }
+        }
+    ]
+}
