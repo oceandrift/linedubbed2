@@ -1,2 +1,2 @@
-module runner.linedubbed.runner.client;
+module linedubbed.runner.client;
 
