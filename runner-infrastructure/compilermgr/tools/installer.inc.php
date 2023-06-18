@@ -10,23 +10,24 @@
 
 declare(strict_types=1);
 
-function main(string $driverName, int $argc, array $argv): int
+function main(int $argc, array $argv): int
 {
     $console = new Console();
 
-    if ($argc !== 2) {
+    if ($argc !== 3) {
         $console->printError(
             'Invalid number of arguments.', PHP_EOL,
             'Usage:', PHP_EOL,
-            "\t", $argv[0], ' <version>',
+            "\t", $argv[0], ' <compiler> <version>',
         );
         return 1;
     }
 
     // determine compiler/driver
-    switch($driverName) {
+    $driverName = $argv[1];
+    switch ($driverName) {
         default:
-            throw new ErrorException('Missing driver: ' . $driver);
+            throw new ErrorException('Missing driver for compiler: ' . $driver);
 
         case 'dmd':
             $driver = new DrvDMD();
@@ -38,7 +39,7 @@ function main(string $driverName, int $argc, array $argv): int
     }
 
     // determine verison to install
-    $version = $argv[1];
+    $version = $argv[2];
     $console->print('Downloading ', strtoupper($driver->getCompilerName()), ' v', $version);
 
     // download
