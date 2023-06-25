@@ -1,5 +1,5 @@
 {
-    "name": "linedubbed2",
+    "name": "linedubbed",
     "description": "lineDUBbed – DUB package testing system",
 
     "copyright": "Copyright © 2023 Elias Batek",
@@ -10,16 +10,69 @@
     ],
 
     "targetPath": "bin",
+    "targetType": "library",
+
+    "configurations": [
+        {
+            "name":"library",
+            "targetType": "library",
+            "excludedSourceFiles": [
+                "source/linedubbed/controller/*",
+                "source/linedubbed/runner/*"
+            ],
+            "dependencies": {
+                "linedubbed:common": "*",
+                "linedubbed:controller": "*",
+                "linedubbed:runner": "*"
+            }
+        },
+        {
+            "name":"controller",
+            "targetType": "executable",
+            "excludedSourceFiles": [
+                "source/linedubbed/package.d",
+                "source/linedubbed/runner/*"
+            ],
+            "dependencies": {
+                "linedubbed:controller": "*"
+            }
+        },
+        {
+            "name":"runner",
+            "targetType": "executable",
+            "excludedSourceFiles": [
+                "source/linedubbed/controller/*",
+                "source/linedubbed/package.d"
+            ],
+            "dependencies": {
+                "linedubbed:runner": "*"
+            }
+        }
+    ],
 
     "subPackages": [
         {
+            "name": "common",
+            "description": "Common library",
+            "importPaths": ["common"],
+            "sourcePaths": ["common"],
+            "targetPath": "bin",
+            "targetType": "library",
+            "dependencies": {
+            }
+        },
+        {
             "name": "controller",
             "description": "Central controller",
-            "importPaths": ["controller"],
-            "sourcePaths": ["controller"],
+            "importPaths": ["controller/"],
+            "sourcePaths": ["controller/"],
             "targetPath": "bin",
-            "targetType": "executable",
+            "targetType": "library",
             "dependencies": {
+                "oceandrift-database:mariadb": "~>0.23.530",
+                "oceandrift-database:orm": "*",
+                "oceandrift-http:microframework": {"path": "../oceandrift/http"},
+                "poodinis": "~>9.0.0"
             }
         },
         {
@@ -28,9 +81,10 @@
             "importPaths": ["runner"],
             "sourcePaths": ["runner"],
             "targetPath": "bin",
-            "targetType": "executable",
+            "targetType": "library",
             "dependencies": {
-                "requests": "~>2.0"
+                "arsd-official:http": "~>10.9.10",
+                "linedubbed:common": "*"
             }
         }
     ]
