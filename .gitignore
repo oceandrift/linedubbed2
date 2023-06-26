@@ -4,3 +4,6 @@ dub.selections.json
 
 # binary
 /bin/
+
+# etc
+/etc/linedubbed-controller.conf

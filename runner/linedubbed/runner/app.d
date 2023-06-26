@@ -8,20 +8,15 @@
 module linedubbed.runner.app;
 
 import std.getopt;
-import std.stdio;
+import std.stdio : File;
 
 static immutable appInfo = `lineDUBbed runner
 Copyright (c) 2023 Elias Batek
 `;
 
-int main(string[] args)
-{
-    return mainRunner(args, stdout, stderr);
-}
-
 @safe:
 
-int mainRunner(string[] args, File stdout, File stderr)
+int runRunner(string[] args, File stdout, File stderr)
 {
     if (args.length != 2)
     {
@@ -39,6 +34,8 @@ int mainRunner(string[] args, File stdout, File stderr)
 
     assert(0);
 }
+
+private:
 
 void printHelp(string arg0, File target)
 {

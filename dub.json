@@ -28,6 +28,7 @@
         },
         {
             "name":"controller",
+            "targetName": "linedubbed-controller",
             "targetType": "executable",
             "excludedSourceFiles": [
                 "source/linedubbed/package.d",
@@ -39,6 +40,7 @@
         },
         {
             "name":"runner",
+            "targetName": "linedubbed-runner",
             "targetType": "executable",
             "excludedSourceFiles": [
                 "source/linedubbed/controller/*",
@@ -59,6 +61,7 @@
             "targetPath": "bin",
             "targetType": "library",
             "dependencies": {
+                "asdf": "~>0.7.17"
             }
         },
         {
@@ -69,6 +72,7 @@
             "targetPath": "bin",
             "targetType": "library",
             "dependencies": {
+                "linedubbed:common": "*",
                 "oceandrift-database:mariadb": "~>0.23.530",
                 "oceandrift-database:orm": "*",
                 "oceandrift-http:microframework": {"path": "../oceandrift/http"},
@@ -87,5 +91,12 @@
                 "linedubbed:common": "*"
             }
         }
-    ]
+    ],
+
+    "buildTypes":{
+        "io": {
+            "buildOptions": ["inline", "optimize"],
+            "buildRequirements": ["requireBoundsCheck"]
+        }
+    }
 }
