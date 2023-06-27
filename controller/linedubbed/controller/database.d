@@ -27,11 +27,26 @@ Database setupDB(const Config config)
     );
 }
 
-Database getDatabase() @safe nothrow @nogc
+final class DatabasePool
 {
-    // TODO
-    return db;
-}
+    public this(const AppConfig config)
+    {
+        _config = config.get();
+    }
 
-// thread-local
-private static Database db;
+    private
+    {
+        const Config _config;
+
+        // thread-local
+        static Database _database = null;
+    }
+
+    public Database getConnection()
+    {
+        if (_database is null)
+            _database = setupDB(_config);
+
+        return _database;
+    }
+}

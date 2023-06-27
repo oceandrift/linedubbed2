@@ -28,7 +28,7 @@ final class AppConfig
 {
 @safe pure nothrow @nogc:
 
-    const(Config) get()
+    const(Config) get() inout
     {
         return _cfg;
     }

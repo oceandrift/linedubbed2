@@ -33,9 +33,21 @@ int runController(string[] args)
     try
     {
         import linedubbed.controller.database;
+        import linedubbed.controller.migrations;
 
         Database db = setupDB(config);
         db.connect();
+
+        // migrate DB?
+        if ((args.length == 2) && (args[1] == "migrate"))
+        {
+            auto dbMigrator = DatabaseMigrator(config, db);
+            dbMigrator.ensureMigrationsTableExists();
+            dbMigrator.migrate();
+            db.close();
+            return 0;
+        }
+
         db.close();
     }
     catch (Exception ex)
