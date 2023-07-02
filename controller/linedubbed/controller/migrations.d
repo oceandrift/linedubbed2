@@ -34,8 +34,8 @@ struct DatabaseMigrator
                 "CREATE TABLE IF NOT EXISTS `schema_migrations` ("
                     ~ " `id` BIGINT AUTO_INCREMENT PRIMARY KEY"
                     ~ ", `level` INTEGER NOT NULL"
-                    ~ ", `executed_at DATETIME NOT NULL"
-                    ~ "`)"
+                    ~ ", `executed_at` DATETIME NOT NULL"
+                    ~ ")"
             );
         }
 
