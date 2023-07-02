@@ -41,10 +41,13 @@ int runController(string[] args)
         // migrate DB?
         if ((args.length == 2) && (args[1] == "migrate"))
         {
+            logInfo("== Database Schema Migrator ==");
             auto dbMigrator = DatabaseMigrator(config, db);
             dbMigrator.ensureMigrationsTableExists();
             dbMigrator.migrate();
             db.close();
+
+            logInfo("Success.");
             return 0;
         }
 

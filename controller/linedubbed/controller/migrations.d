@@ -31,7 +31,7 @@ struct DatabaseMigrator
         void ensureMigrationsTableExists()
         {
             _db.execute(
-                "CREATE TABLE IF NOT EXISTS `schema_migrations` ("
+                "CREATE TABLE IF NOT EXISTS `schema_migration` ("
                     ~ " `id` BIGINT AUTO_INCREMENT PRIMARY KEY"
                     ~ ", `level` INTEGER NOT NULL"
                     ~ ", `executed_at` DATETIME NOT NULL"
@@ -42,7 +42,7 @@ struct DatabaseMigrator
         int getMigrationLevel()
         {
             Statement stmt = _db.prepare(
-                "SELECT `level` FROM `schema_migrations` ORDER BY `id` DESC LIMIT 1"
+                "SELECT `level` FROM `schema_migration` ORDER BY `id` DESC LIMIT 1"
             );
 
             scope (exit)
@@ -59,20 +59,23 @@ struct DatabaseMigrator
         {
             int currentLvl = this.getMigrationLevel();
 
+            if (currentLvl > appMigrations.length)
+            {
+                logInfo("Database schema beyond known migrations. Application outdated?");
+                return;
+            }
+
             if (currentLvl == appMigrations.length)
             {
                 logInfo("Database schema is up-to-date.");
                 return;
             }
 
-            foreach (idx, migration; appMigrations[currentLvl .. $])
+            foreach (migration; appMigrations[currentLvl .. $])
             {
-                assert(idx < size_t(int.max));
-                immutable int target = cast(int) idx + 1;
+                immutable int target = currentLvl + 1;
 
-                if (idx != currentLvl)
-                    assert(false, "Migration level mismatch");
-
+                logInfo("Applying migration #", target);
                 this.applyUp(migration);
                 this.saveMigrationLevel(target);
                 currentLvl = target;
@@ -85,7 +88,7 @@ struct DatabaseMigrator
         void saveMigrationLevel(int value)
         {
             Statement stmt = _db.prepare(
-                "INSERT INTO `schema_migrations` (`level`, `executed_at`) VALUES (?, CURRENT_TIMESTAMP)"
+                "INSERT INTO `schema_migration` (`level`, `executed_at`) VALUES (?, CURRENT_TIMESTAMP)"
             );
 
             scope (exit)
