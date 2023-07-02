@@ -114,5 +114,22 @@ struct Migration
 }
 
 static immutable appMigrations = [
-    Migration(""),
+    Migration(
+        "CREATE TABLE `operator` ("
+            ~ "`id` BIGINT AUTO_INCREMENT PRIMARY KEY"
+            ~ ", `name` VARCHAR(64) NOT NULL"
+            ~ ")",
+        "DROP TABLE `operator`",
+    ),
+    Migration(
+        "CREATE TABLE `runner` ("
+            ~ "`id` BIGINT AUTO_INCREMENT PRIMARY KEY"
+            ~ ", `name` VARCHAR(24) NOT NULL"
+            ~ ", `operator_id` BIGINT NOT NULL"
+            ~ ", `description` TEXT NOT NULL"
+            ~ ", `auth_token_hash` CHAR(128)"
+            ~ ", FOREIGN KEY (`operator_id`) REFERENCES `operator`(`id`)"
+            ~ ")",
+        "DROP TABLE `runner`",
+    ),
 ];
