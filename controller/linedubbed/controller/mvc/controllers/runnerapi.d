@@ -10,9 +10,25 @@ module linedubbed.controller.mvc.controllers.runnerapi;
 import oceandrift.http.message;
 
 @safe:
+
+Response sendJSON(T)(Response response, T data)
+{
+    import asdf : serializeToJson;
+
+    const string json = (function(T data) @trusted => serializeToJson(data))(data);
+    response.body.write(json);
+    response.withHeader!"Content-Type"("application/json");
+    return response;
+}
+
 final class RunnerAPIController
 {
     Response getIndex(Request, Response response)
+    {
+        return response.sendJSON("OK");
+    }
+
+    Response getJob(Request, Response response)
     {
         response.body.write("dings");
         return response;

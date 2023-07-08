@@ -11,9 +11,12 @@ import oceandrift.db.mariadb;
 import oceandrift.db.orm;
 import linedubbed.controller.config;
 
+///
+public import oceandrift.db.orm : prepareCollection, PreparedCollection;
+
 @safe:
 
-alias EntityMgr = EntityManager!MariaDB;
+alias EntityManager = oceandrift.db.orm.EntityManager!MariaDB;
 alias Database = MariaDB;
 
 Database setupDB(const Config config)
@@ -29,7 +32,7 @@ Database setupDB(const Config config)
 
 final class DatabasePool
 {
-    public this(const AppConfig config)
+    public this(AppConfig config)
     {
         _config = config.get();
     }
@@ -42,11 +45,18 @@ final class DatabasePool
         static Database _database = null;
     }
 
-    public Database getConnection()
+    public Database connection()
     {
         if (_database is null)
             _database = setupDB(_config);
 
         return _database;
     }
+
+    public EntityManager entityManager()
+    {
+        return EntityManager(this.connection);
+    }
+
+    alias em = entityManager;
 }

@@ -73,11 +73,12 @@
             "targetType": "library",
             "dependencies": {
                 "linedubbed:common": "*",
-                "oceandrift-database:mariadb": "~>0.23.530",
+                "oceandrift-database:mariadb": "~>0.26.0",
                 "oceandrift-database:orm": "*",
                 "oceandrift-http:microframework": {"path": "../oceandrift/http"},
                 "poodinis": "~>9.0.0"
-            }
+            },
+            "libs": ["sodium"]
         },
         {
             "name": "runner",

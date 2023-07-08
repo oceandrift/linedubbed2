@@ -12,8 +12,11 @@ import oceandrift.db.orm;
 struct Runner
 {
     mixin EntityID;
+
     string name;
-    string operator;
+    long operatorID;
     string description;
-    string authTokenHash;
+
+    string apiTokenName;
+    string apiTokenHash;
 }

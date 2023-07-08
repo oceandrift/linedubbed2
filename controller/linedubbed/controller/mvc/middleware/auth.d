@@ -7,14 +7,29 @@
  +/
 module linedubbed.controller.mvc.middleware.auth;
 
+import linedubbed.controller.database;
+import linedubbed.controller.mvc.models.runner;
 import oceandrift.http.microframework.routing.middleware;
 import oceandrift.http.microframework.httpauth;
-import std.digest.sha;
+import linedubbed.controller.sodium;
+import linedubbed.controller.apitoken;
 
 @safe:
 
 final class RunnerAPIAuthMiddleware
 {
+    public this(
+        DatabasePool db,
+    )
+    {
+        _db = db;
+    }
+
+    private
+    {
+        DatabasePool _db;
+    }
+
     public MiddlewareRequestHandler requestHandler()
     {
         return basicAuthMiddleware!"Runner API"(&this.checkCredentials);
@@ -22,6 +37,22 @@ final class RunnerAPIAuthMiddleware
 
     private bool checkCredentials(Credentials cred)
     {
-        return false;
+        enum bq = EntityManager.find!Runner().where("api_token_name", '=').select();
+        PreparedCollection!Runner pc = bq.prepareCollection(_db.connection());
+        pc.bind(0, cred.username.idup);
+        auto runners = pc.execute();
+
+        // not found?
+        if (runners.empty)
+            return false;
+
+        Runner r = runners.front;
+        scope (exit)
+            runners.popFront();
+
+        if (!apiTokenVerify(cred.password.idup, r.apiTokenHash))
+            return false;
+
+        return true;
     }
 }
