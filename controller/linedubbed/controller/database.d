@@ -21,13 +21,16 @@ alias Database = MariaDB;
 
 Database setupDB(const Config config)
 {
-    return new Database(
+    auto db = new Database(
         config.database.host,
         config.database.username,
         config.database.password,
         config.database.database,
         config.database.port,
     );
+
+    db.connect();
+    return db;
 }
 
 final class DatabasePool
