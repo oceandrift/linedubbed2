@@ -36,7 +36,6 @@ int runController(string[] args)
         import linedubbed.controller.migrations;
 
         Database db = setupDB(config);
-        db.connect();
 
         // migrate DB?
         if ((args.length == 2) && (args[1] == "migrate"))

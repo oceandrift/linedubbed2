@@ -38,7 +38,7 @@ final class RunnerAPIAuthMiddleware
     private bool checkCredentials(Credentials cred)
     {
         enum bq = EntityManager.find!Runner().where("api_token_name", '=').select();
-        PreparedCollection!Runner pc = bq.prepareCollection(_db.connection());
+        PreparedCollection!Runner pc = bq.prepareCollection(_db.connection);
         pc.bind(0, cred.username.idup);
         auto runners = pc.execute();
 
