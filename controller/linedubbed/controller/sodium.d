@@ -77,6 +77,37 @@ ubyte[] hex2bin(string hex) @trusted pure
 }
 
 ///
+enum Base64Variant : int
+{
+    original = sodium_base64_VARIANT_ORIGINAL, ///
+    originalNoPadding = sodium_base64_VARIANT_ORIGINAL_NO_PADDING, ///
+    urlsafe = sodium_base64_VARIANT_URLSAFE, ///
+    urlsafeNoPadding = sodium_base64_VARIANT_URLSAFE_NO_PADDING, ///
+}
+
+///
+string bin2base64(const ubyte[] bin, Base64Variant variant = Base64Variant.original) @trusted pure nothrow
+{
+    immutable size_t base64Length = sodium_base64_encoded_len(bin.length, variant);
+    immutable size_t outputLength = base64Length - 1;
+    auto base64 = new char[](base64Length);
+
+    return sodium_bin2base64(base64.ptr, base64.length, bin.ptr, bin.length, variant)[0 .. outputLength];
+}
+
+///
+ubyte[] base642bin(string base64, Base64Variant variant = Base64Variant.original) @trusted pure
+{
+    auto bin = new ubyte[](base64.length / 4 * 3);
+    size_t binLength = 0;
+
+    if (sodium_base642bin(bin.ptr, bin.length, base64.ptr, base64.length, null, &binLength, null, variant) != 0)
+        throw new SodiumException();
+
+    return bin[0 .. binLength];
+}
+
+///
 ubyte[] randomBytes(size_t n) @trusted nothrow
 {
     auto buffer = new ubyte[](n);
@@ -85,6 +116,14 @@ ubyte[] randomBytes(size_t n) @trusted nothrow
 }
 
 private:
+
+enum
+{
+    sodium_base64_VARIANT_ORIGINAL = 1,
+    sodium_base64_VARIANT_ORIGINAL_NO_PADDING = 3,
+    sodium_base64_VARIANT_URLSAFE = 5,
+    sodium_base64_VARIANT_URLSAFE_NO_PADDING = 7,
+}
 
 extern (C) nothrow:
 
@@ -103,6 +142,20 @@ int sodium_hex2bin(
     const(const(char)*) ignore, const(size_t*) bin_len,
     const(const(char)**) hex_end
 ) pure;
+
+char* sodium_bin2base64(
+    const(char*) b64, const size_t b64_maxLen,
+    const(const(ubyte)*) bin, const size_t bin_len,
+    const int variant) pure;
+
+int sodium_base642bin(
+    const(ubyte*) bin, const size_t bin_maxLen,
+    const(const(char)*) b64, const size_t b64_len,
+    const(const(char)*) ignore, const(size_t*) bin_len,
+    const(const(char)**) b64_end, const int variant
+) pure;
+
+size_t sodium_base64_encoded_len(size_t bin_len, int variant) pure;
 
 enum crypto_generichash_BYTES_MAX = 64U;
 

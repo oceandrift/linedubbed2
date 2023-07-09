@@ -127,8 +127,8 @@ static immutable appMigrations = [
             ~ ", `name` VARCHAR(24) NOT NULL"
             ~ ", `operator_id` BIGINT NOT NULL"
             ~ ", `description` TEXT NOT NULL"
-            ~ ", `auth_token_name` VARCHAR(24)"
-            ~ ", `auth_token_hash` CHAR(128)"
+            ~ ", `api_token_name` VARCHAR(24)"
+            ~ ", `api_token_hash` CHAR(128)"
             ~ ", FOREIGN KEY (`operator_id`) REFERENCES `operator`(`id`)"
             ~ ")",
         "DROP TABLE `runner`",
